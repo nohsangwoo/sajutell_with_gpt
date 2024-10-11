@@ -42,24 +42,52 @@ Gender: ${gender === '남' ? 'Male' : 'Female'}
 Time of Birth: ${birthTime ?? 'Unknown'}
 Areas of Interest: ${interestsString}
 
-Please provide a comprehensive fortune reading covering the specified areas of interest. Structure your response in the following format:
+Please provide a comprehensive and detailed fortune reading covering only the specified areas of interest. Structure your response in the following format:
 
 [총운]
-(Overall fortune for the year)
+(Provide a detailed overall fortune for the year, about 150-200 words)
 
-[사업운]
-(Business fortune)
+${
+  interests.includes('사업운')
+    ? `[사업운]
+(Provide a detailed business fortune, about 150-200 words)
+`
+    : ''
+}
 
-[금전운]
-(Financial fortune)
+${
+  interests.includes('금전운')
+    ? `[금전운]
+(Provide a detailed financial fortune, about 150-200 words)
+`
+    : ''
+}
 
-[연애운]
-(Love and relationship fortune)
+${
+  interests.includes('연애운')
+    ? `[연애운]
+(Provide a detailed love and relationship fortune, about 150-200 words)
+`
+    : ''
+}
 
-[건강운]
-(Health fortune)
+${
+  interests.includes('건강운')
+    ? `[건강운]
+(Provide a detailed health fortune, about 150-200 words)
+`
+    : ''
+}
 
-The response should be entirely in Korean, tailored to the individual's information provided above. Each section should be concise but informative.`
+${
+  interests.includes('학업운')
+    ? `[학업운]
+(Provide a detailed academic fortune, about 150-200 words)
+`
+    : ''
+}
+
+The response should be entirely in Korean, tailored to the individual's information provided above. Each section should be detailed, informative, and specific to the individual. Use poetic and mystical language typical of traditional fortune-telling, but ensure the content is clear and meaningful. Include specific advice or guidance in each section.`
 
   try {
     const completion = await openai.chat.completions.create({

@@ -1,12 +1,11 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { Select, Tag } from 'antd';
+import { format, parse } from 'date-fns';
 import { ko } from 'date-fns/locale';
+import { Select, Tag } from 'antd';
 
 const { Option } = Select;
 
@@ -32,6 +31,78 @@ export default function Home() {
   const [interests, setInterests] = useState<string[]>([]);
   const [fortune, setFortune] = useState<FortuneSection[] | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [birthDateInput, setBirthDateInput] = useState('');
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const handleDateChange = (date: Date | undefined) => {
+    setBirthDate(date || null);
+    if (date) {
+      setBirthDateInput(format(date, 'yyyyMMdd'));
+    }
+  };
+
+  const handleDateInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value;
+    setBirthDateInput(input);
+    if (input.length === 8) {
+      const parsedDate = parse(input, 'yyyyMMdd', new Date());
+      if (!isNaN(parsedDate.getTime())) {
+        setBirthDate(parsedDate);
+      }
+    }
+  };
+
+  const MobileDatePicker = () => {
+    const years = Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i);
+    const months = Array.from({ length: 12 }, (_, i) => i + 1);
+    const days = Array.from({ length: 31 }, (_, i) => i + 1);
+
+    return (
+      <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-gray-800 p-4 rounded-lg">
+          <div className="flex space-x-4">
+            <select
+              value={birthDate?.getFullYear()}
+              onChange={(e) => handleDateChange(new Date(parseInt(e.target.value), birthDate?.getMonth() || 0, birthDate?.getDate() || 1))}
+              className="bg-gray-700 text-white text-xl p-2 rounded"
+            >
+              {years.map(year => <option key={year} value={year}>{year}년</option>)}
+            </select>
+            <select
+              value={(birthDate?.getMonth() || 0) + 1}
+              onChange={(e) => handleDateChange(new Date(birthDate?.getFullYear() || new Date().getFullYear(), parseInt(e.target.value) - 1, birthDate?.getDate() || 1))}
+              className="bg-gray-700 text-white text-xl p-2 rounded"
+            >
+              {months.map(month => <option key={month} value={month}>{month}월</option>)}
+            </select>
+            <select
+              value={birthDate?.getDate()}
+              onChange={(e) => handleDateChange(new Date(birthDate?.getFullYear() || new Date().getFullYear(), birthDate?.getMonth() || 0, parseInt(e.target.value)))}
+              className="bg-gray-700 text-white text-xl p-2 rounded"
+            >
+              {days.map(day => <option key={day} value={day}>{day}일</option>)}
+            </select>
+          </div>
+          <button
+            onClick={() => setShowDatePicker(false)}
+            className="mt-4 w-full bg-yellow-500 text-gray-900 p-2 rounded text-lg font-bold"
+          >
+            확인
+          </button>
+        </div>
+      </div>
+    );
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,14 +148,26 @@ export default function Home() {
             </div>
             <div>
               <label htmlFor="birthDate" className="block text-lg font-medium text-gray-300">생년월일</label>
-              <DatePicker
-                selected={birthDate}
-                onChange={(date: Date | null) => setBirthDate(date)}
-                dateFormat="yyyy년 MM월 dd일"
-                locale={ko}
-                className="mt-2 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 text-white text-lg"
-                wrapperClassName="w-full"
-              />
+              {isMobile ? (
+                <input
+                  type="text"
+                  id="birthDate"
+                  value={birthDateInput}
+                  onClick={() => setShowDatePicker(true)}
+                  readOnly
+                  placeholder="생년월일 선택"
+                  className="mt-2 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 text-white text-lg"
+                />
+              ) : (
+                <input
+                  type="date"
+                  id="birthDate"
+                  value={birthDate ? format(birthDate, 'yyyy-MM-dd') : ''}
+                  onChange={(e) => handleDateChange(e.target.valueAsDate || undefined)}
+                  className="mt-2 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 text-white text-lg"
+                />
+              )}
+              {isMobile && showDatePicker && <MobileDatePicker />}
               <div className="mt-3 flex items-center">
                 <input
                   type="checkbox"
