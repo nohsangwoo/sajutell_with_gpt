@@ -11,11 +11,23 @@ import { FaSpinner } from 'react-icons/fa';
 const { Option } = Select;
 
 const interestOptions = [
-  { value: '재물운', label: '재물운' },
-  { value: '사업운', label: '사업운' },
-  { value: '연애운', label: '연애운' },
-  { value: '건강운', label: '건강운' },
-  { value: '학업운', label: '학업운' },
+  { value: '재물운', label: '재물운' },  // 돈과 재물에 관한 운
+  { value: '사업운', label: '사업운' },  // 사업 및 직업과 관련된 운
+  { value: '연애운', label: '연애운' },  // 연애와 사랑에 관련된 운
+  { value: '건강운', label: '건강운' },  // 건강과 관련된 운
+  { value: '학업운', label: '학업운' },  // 학업과 지식, 공부에 관련된 운
+  { value: '결혼운', label: '결혼운' },  // 결혼과 관련된 운
+  { value: '자녀운', label: '자녀운' },  // 자녀와 관련된 운
+  { value: '인연운', label: '인연운' },  // 인간관계와 인연에 관련된 운
+  { value: '승진운', label: '승진운' },  // 직장에서의 승진 및 성공과 관련된 운
+  { value: '이사운', label: '이사운' },  // 이사 및 이동과 관련된 운
+  { value: '주거운', label: '주거운' },  // 주택이나 거주지와 관련된 운
+  { value: '성격과 성향', label: '성격과 성향' },  // 개인의 성격과 성향 분석
+  { value: '균형과 조화', label: '균형과 조화' },  // 오행의 균형과 조화를 통한 인생의 흐름
+  { value: '부모운', label: '부모운' },  // 부모님과의 관계에 대한 운
+  { value: '형제운', label: '형제운' },  // 형제자매와의 관계에 대한 운
+  { value: '사회적 명성', label: '사회적 명성' },  // 사회적 명성, 대인관계와 관련된 운
+  { value: '타고난 재능', label: '타고난 재능' },  // 타고난 재능과 능력 분석
 ];
 
 interface FortuneSection {
@@ -35,6 +47,7 @@ export default function Home() {
   const [isMobile, setIsMobile] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [birthDateInput, setBirthDateInput] = useState('');
+  const [showTimePicker, setShowTimePicker] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -105,6 +118,40 @@ export default function Home() {
     );
   };
 
+  const TimePickerModal = () => {
+    const hours = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
+    const minutes = Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, '0'));
+
+    return (
+      <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-gray-800 p-4 rounded-lg">
+          <div className="flex space-x-4">
+            <select
+              value={birthTime.split(':')[0]}
+              onChange={(e) => setBirthTime(`${e.target.value}:${birthTime.split(':')[1]}`)}
+              className="bg-gray-700 text-white text-xl p-2 rounded"
+            >
+              {hours.map(hour => <option key={hour} value={hour}>{hour}시</option>)}
+            </select>
+            <select
+              value={birthTime.split(':')[1]}
+              onChange={(e) => setBirthTime(`${birthTime.split(':')[0]}:${e.target.value}`)}
+              className="bg-gray-700 text-white text-xl p-2 rounded"
+            >
+              {minutes.map(minute => <option key={minute} value={minute}>{minute}분</option>)}
+            </select>
+          </div>
+          <button
+            onClick={() => setShowTimePicker(false)}
+            className="mt-4 w-full bg-yellow-500 text-gray-900 p-2 rounded text-lg font-bold"
+          >
+            확인
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -147,7 +194,7 @@ export default function Home() {
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
             className="text-4xl font-bold text-center text-yellow-500 mb-10"
           >
-            고급 사주 운세 보기
+            사주로 보는 나의 운명
           </motion.h1>
           <form onSubmit={handleSubmit} className="space-y-8">
             <motion.div variants={fadeInUp}>
@@ -210,12 +257,15 @@ export default function Home() {
             <motion.div variants={fadeInUp}>
               <label htmlFor="birthTime" className="block text-lg font-medium text-gray-300">태어난 시간 (선택사항)</label>
               <input
-                type="time"
+                type="text"
                 id="birthTime"
                 value={birthTime}
-                onChange={(e) => setBirthTime(e.target.value)}
-                className="mt-2 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 text-white text-lg"
+                onClick={() => setShowTimePicker(true)}
+                readOnly
+                placeholder="시간 선택"
+                className="mt-2 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 text-white text-lg cursor-pointer"
               />
+              {showTimePicker && <TimePickerModal />}
               <p className="mt-2 text-base text-gray-400">모르는 경우 비워두세요</p>
             </motion.div>
             <motion.div variants={fadeInUp}>
@@ -245,10 +295,12 @@ export default function Home() {
                   <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    className='mr-2'
                   >
-                    <FaSpinner className="mr-2" />
+                    <FaSpinner className="" />
                   </motion.div>
                 ) : null}
+
                 {loading ? '운세 분석 중...' : '운세 보기'}
               </button>
             </motion.div>

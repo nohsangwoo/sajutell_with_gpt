@@ -32,62 +32,49 @@ export async function POST(request: Request) {
 
   const calendarType = isLunar ? '음력' : '양력'
   const interestsString = interests.join(', ')
+  const currentDate = new Date()
+  const currentYear = currentDate.getFullYear()
+  const formattedCurrentDate = currentDate.toISOString().split('T')[0]
 
-  const prompt = `Based on the following information, provide a detailed and personalized fortune-telling in Korean:
+  const prompt = `Based on the following information, provide a detailed and personalized fortune-telling:
+
 Name: ${name}
 Date of Birth: ${birthDate} (${
     calendarType === '음력' ? 'Lunar calendar' : 'Solar calendar'
   })
-Gender: ${gender === '남' ? 'Male' : 'Female'}
+Gender: ${gender}
 Time of Birth: ${birthTime ?? 'Unknown'}
 Areas of Interest: ${interestsString}
+Current Date: ${formattedCurrentDate}
+Current Year: ${currentYear}
 
-Please provide a comprehensive and detailed fortune reading covering only the specified areas of interest. Structure your response in the following format:
+Please provide a comprehensive and detailed fortune reading in Korean, covering only the specified areas of interest. Structure your response in the following format, with each section containing about 200-250 words:
 
-[총운]
-(Provide a detailed overall fortune for the year, about 150-200 words)
+[Overall Fortune]
+(Provide a detailed overall fortune for the year ${currentYear})
 
-${
-  interests.includes('사업운')
-    ? `[사업운]
-(Provide a detailed business fortune, about 150-200 words)
-`
-    : ''
-}
+${interests
+  .map(
+    interest => `
+[${interest}]
+(Provide a detailed fortune for ${interest}, including specific advice and guidance)
+`,
+  )
+  .join('')}
 
-${
-  interests.includes('금전운')
-    ? `[금전운]
-(Provide a detailed financial fortune, about 150-200 words)
-`
-    : ''
-}
+Please ensure that your response adheres to the following guidelines:
+1. The entire response should be in Korean, despite this prompt being in English.
+2. Tailor the fortune to the individual's information provided above.
+3. Each section should be detailed, informative, and specific to the individual.
+4. Use poetic and mystical language typical of traditional fortune-telling, but ensure the content is clear and meaningful.
+5. Include specific advice or guidance in each section that the reader can empathize with and apply to their life.
+6. Consider the person's date of birth in relation to the current year.
+7. Provide gender-specific advice where relevant.
+8. Offer in-depth analysis for each selected area of interest.
+9. Reflect current social and economic situations in your practical advice.
+10. Provide insights into the individual's potential and challenges.
 
-${
-  interests.includes('연애운')
-    ? `[연애운]
-(Provide a detailed love and relationship fortune, about 150-200 words)
-`
-    : ''
-}
-
-${
-  interests.includes('건강운')
-    ? `[건강운]
-(Provide a detailed health fortune, about 150-200 words)
-`
-    : ''
-}
-
-${
-  interests.includes('학업운')
-    ? `[학업운]
-(Provide a detailed academic fortune, about 150-200 words)
-`
-    : ''
-}
-
-The response should be entirely in Korean, tailored to the individual's information provided above. Each section should be detailed, informative, and specific to the individual. Use poetic and mystical language typical of traditional fortune-telling, but ensure the content is clear and meaningful. Include specific advice or guidance in each section.`
+Your response should be comprehensive, allowing the reader to deeply connect with the content and apply it to their real-life situations.`
 
   try {
     const completion = await openai.chat.completions.create({

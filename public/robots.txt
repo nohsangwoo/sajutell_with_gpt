@@ -1,0 +1,13 @@
+# *
+User-agent: *
+Allow: /
+
+# *
+User-agent: *
+Disallow: /private/
+
+# Host
+Host: https://sajutell.ludgi.ai
+
+# Sitemaps
+Sitemap: https://sajutell.ludgi.ai/sitemap.xml
