@@ -179,6 +179,12 @@ export default function Home() {
     transition: { duration: 0.5 }
   };
 
+  const handleInterestsChange = (value: string[]) => {
+    if (value.length <= 5) {
+      setInterests(value);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
       <motion.div
@@ -217,6 +223,7 @@ export default function Home() {
                   value={birthDateInput}
                   onClick={() => setShowDatePicker(true)}
                   readOnly
+                  inputMode="none"
                   placeholder="생년월일 선택"
                   className="mt-2 block w-full bg-gray-700 border-gray-600 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500 text-white text-lg"
                 />
@@ -273,10 +280,12 @@ export default function Home() {
               <Select
                 mode="multiple"
                 style={{ width: '100%' }}
-                placeholder="관심 분야를 선택하세요"
-                onChange={(value) => setInterests(value)}
+                placeholder="관심 분야를 선택하세요 (최대 5개)"
+                onChange={handleInterestsChange}
+                value={interests}
                 optionLabelProp="label"
                 className="mt-2 text-lg"
+                maxTagCount={5}
               >
                 {interestOptions.map((option) => (
                   <Option key={option.value} value={option.value} label={option.label}>
@@ -335,6 +344,21 @@ export default function Home() {
                   <p className="text-gray-200 leading-relaxed text-lg">{section.content}</p>
                 </motion.div>
               ))}
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="mt-8 p-4 bg-gray-600 rounded-lg text-center"
+              >
+                <p className="text-yellow-300 text-lg font-medium">
+                  여러분의 지원이 더 나은 서비스로 이어집니다!
+                </p>
+                <p className="text-gray-300 mt-2">
+                  광고를 클릭해 주시면 저희에게 큰 힘이 됩니다.
+                  여러분의 작은 관심이 더 정확한 운세와 새로운 기능 개발의 원동력이 됩니다.
+                </p>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
