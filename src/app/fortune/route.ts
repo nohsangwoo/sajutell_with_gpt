@@ -50,7 +50,7 @@ Current Year: ${currentYear}
 
 Please provide a comprehensive and detailed fortune reading in Korean, covering only the specified areas of interest. Structure your response in the following format, with each section containing about 200-250 words:
 
-[Overall Fortune]
+[전체 운세]
 (Provide a detailed overall fortune for the year ${currentYear})
 
 ${interests
