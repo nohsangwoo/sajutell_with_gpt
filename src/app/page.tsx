@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format, parse } from 'date-fns';
-import { ko } from 'date-fns/locale';
 import { Select, Tag } from 'antd';
 import { FaSpinner } from 'react-icons/fa';
 
@@ -48,6 +47,7 @@ export default function Home() {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [birthDateInput, setBirthDateInput] = useState('');
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const basicUrl = process.env.NODE_ENV === 'production' ? 'https://sajutell.ludgi.ai' : 'http://localhost:3000'
 
   useEffect(() => {
     const checkMobile = () => {
@@ -156,17 +156,26 @@ export default function Home() {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post('/fortune', {
+      const response = await axios.post(`${basicUrl}/fortune`, {
         name,
         birthDate: birthDate?.toISOString().split('T')[0],
         isLunar,
         gender,
         birthTime,
         interests
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
       setFortune(response.data.fortune);
     } catch (error) {
       console.error('운세 가져오기 오류:', error);
+      if (axios.isAxiosError(error)) {
+        alert(`운세 가져오기 실패: ${error.response?.data?.message || error.message}`);
+      } else {
+        alert('알 수 없는 오류가 발생했습니다.');
+      }
     } finally {
       setLoading(false);
     }
