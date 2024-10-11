@@ -128,7 +128,7 @@ export default function Home() {
           <div className="flex space-x-4">
             <select
               value={birthTime.split(':')[0]}
-              onChange={(e) => setBirthTime(`${e.target.value}:${birthTime.split(':')[1]}`)}
+              onChange={(e) => setBirthTime(`${e.target.value}:${birthTime?.split(':')[1] ?? '00'}`)}
               className="bg-gray-700 text-white text-xl p-2 rounded"
             >
               {hours.map(hour => <option key={hour} value={hour}>{hour}시</option>)}
