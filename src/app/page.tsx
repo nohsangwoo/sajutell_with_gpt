@@ -20,7 +20,7 @@ const interestOptions = [
   { value: '인연운', label: '인연운' },  // 인간관계와 인연에 관련된 운
   { value: '승진운', label: '승진운' },  // 직장에서의 승진 및 성공과 관련된 운
   { value: '이사운', label: '이사운' },  // 이사 및 이동과 관련된 운
-  { value: '주거운', label: '주거운' },  // 주택이나 거주지와 관련된 운
+  { value: '주��운', label: '주거운' },  // 주택이나 거주지와 관련된 운
   { value: '성격과 성향', label: '성격과 성향' },  // 개인의 성격과 성향 분석
   { value: '균형과 조화', label: '균형과 조화' },  // 오행의 균형과 조화를 통한 인생의 흐름
   { value: '부모운', label: '부모운' },  // 부모님과의 관계에 대한 운
@@ -82,8 +82,8 @@ export default function Home() {
     const days = Array.from({ length: 31 }, (_, i) => i + 1);
 
     return (
-      <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-gray-800 p-4 rounded-lg">
+      <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto">
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-800 p-4 rounded-lg">
           <div className="flex space-x-4">
             <select
               value={birthDate?.getFullYear()}
@@ -123,8 +123,8 @@ export default function Home() {
     const minutes = Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, '0'));
 
     return (
-      <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-gray-800 p-4 rounded-lg">
+      <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto">
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-800 p-4 rounded-lg">
           <div className="flex space-x-4">
             <select
               value={birthTime.split(':')[0]}
@@ -172,10 +172,11 @@ export default function Home() {
     } catch (error) {
       console.error('운세 가져오기 오류:', error);
       if (axios.isAxiosError(error)) {
-        alert(`운세 가져오기 실패: ${error.response?.data?.message || error.message}`);
+        alert('운세 가져오기를 실패했습니다. 페이지를 리로드 합니다.');
       } else {
-        alert('알 수 없는 오류가 발생했습니다.');
+        alert('알 수 없는 오류가 발생했습니다. 페이지를 리로드 합니다.');
       }
+      window.location.reload();
     } finally {
       setLoading(false);
     }
@@ -209,7 +210,7 @@ export default function Home() {
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
             className="text-4xl font-bold text-center text-yellow-500 mb-10"
           >
-            사주로 보는 나의 운명
+            사주로 보는 나��� 운명
           </motion.h1>
           <form onSubmit={handleSubmit} className="space-y-8">
             <motion.div variants={fadeInUp}>
