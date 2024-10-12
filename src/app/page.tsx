@@ -210,7 +210,7 @@ export default function Home() {
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
             className="text-4xl font-bold text-center text-yellow-500 mb-10"
           >
-            사주로 보는 나��� 운명
+            사주로 보는 나의 운명
           </motion.h1>
           <form onSubmit={handleSubmit} className="space-y-8">
             <motion.div variants={fadeInUp}>
