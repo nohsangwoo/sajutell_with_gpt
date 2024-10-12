@@ -299,7 +299,7 @@ export default function Home() {
               >
                 {interestOptions.map((option) => (
                   <Option key={option.value} value={option.value} label={option.label}>
-                    <Tag color="gold">{option.label}</Tag>
+                    <Tag color="default">{option.label}</Tag>
                   </Option>
                 ))}
               </Select>
