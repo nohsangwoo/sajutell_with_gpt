@@ -20,7 +20,7 @@ const interestOptions = [
   { value: '인연운', label: '인연운' },  // 인간관계와 인연에 관련된 운
   { value: '승진운', label: '승진운' },  // 직장에서의 승진 및 성공과 관련된 운
   { value: '이사운', label: '이사운' },  // 이사 및 이동과 관련된 운
-  { value: '주��운', label: '주거운' },  // 주택이나 거주지와 관련된 운
+  { value: '주거운', label: '주거운' },  // 주택이나 거주지와 관련된 운
   { value: '성격과 성향', label: '성격과 성향' },  // 개인의 성격과 성향 분석
   { value: '균형과 조화', label: '균형과 조화' },  // 오행의 균형과 조화를 통한 인생의 흐름
   { value: '부모운', label: '부모운' },  // 부모님과의 관계에 대한 운
@@ -290,12 +290,12 @@ export default function Home() {
               <Select
                 mode="multiple"
                 style={{ width: '100%' }}
-                placeholder="관심 분야를 선택하세요 (최대 5개)"
+                placeholder="관심 분야를 선택하세요 (최대 3개)"
                 onChange={handleInterestsChange}
                 value={interests}
                 optionLabelProp="label"
                 className="mt-2 text-lg"
-                maxTagCount={5}
+                maxTagCount={3}
               >
                 {interestOptions.map((option) => (
                   <Option key={option.value} value={option.value} label={option.label}>
