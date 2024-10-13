@@ -190,7 +190,7 @@ export default function Home() {
   };
 
   const handleInterestsChange = (value: string[]) => {
-    if (value.length <= 5) {
+    if (value.length <= 2) {
       setInterests(value);
     }
   };
@@ -290,12 +290,12 @@ export default function Home() {
               <Select
                 mode="multiple"
                 style={{ width: '100%' }}
-                placeholder="관심 분야를 선택하세요 (최대 3개)"
+                placeholder="관심 분야를 선택하세요 (최대 2개)"
                 onChange={handleInterestsChange}
                 value={interests}
                 optionLabelProp="label"
                 className="mt-2 text-lg"
-                maxTagCount={3}
+                maxTagCount={2}
               >
                 {interestOptions.map((option) => (
                   <Option key={option.value} value={option.value} label={option.label}>
